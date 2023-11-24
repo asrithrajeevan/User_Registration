@@ -23,6 +23,9 @@
             <div class="form-group">
                 {{form|crispy}}
             </div>
+              {%if error%}
+                {{error}}
+              {%endif%}            
             <div class="form-group d-flex justify-content-end">
                 <input class="btn btn-success" type="submit" value="Submit">
             </div>

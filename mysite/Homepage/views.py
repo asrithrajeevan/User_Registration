@@ -26,12 +26,15 @@ def registration(request):
 
     if request.method == "POST":
         form = UserForm(request.POST)
+        print('form-->',form)
+        print('form not valid')
         if form.is_valid():
-            user = form.save()
+            print('form valid')
+            user = form.save()  # save method will return an id
             request.session["user_id"] = user.user_id
             return redirect("home")
         else:
-            return redirect("register") # register is a url name
+            return render(request, "registration.html", {'form' : form}) # register is a url name
 
     form = UserForm()
     reg_form={
@@ -49,15 +52,21 @@ def login(request):
 
         try:
             log_info = Registration.objects.filter(Email = log_email) # log_info = [[userid : 1, firstname : "asrith"]]
-            user_id = log_info[0].user_id
-            # user_id = None
-            # for x in info:
-            #     user_id = x.user_id
-            if log_email == log_info[0].Email and log_password == log_info[0].password:
-                request.session["user_id"] = user_id
-                return redirect("home")
+            print(log_info)
+            if(log_info):
+                user_id = log_info[0].user_id
+                # user_id = None
+                # for x in info:
+                #     user_id = x.user_id
+                if log_email == log_info[0].Email and log_password == log_info[0].password:
+                    request.session["user_id"] = user_id
+                    return redirect("home")
             else:
-                return HttpResponse("Invalid Email or Password")
+                log_form={
+                    "form" : form,
+                    "error" : "Invalid Email or Password"
+                }
+                return render(request, "login.html", log_form)
             
         except Registration.DoesNotExist:
             return HttpResponse("Invalid Email or Password")
