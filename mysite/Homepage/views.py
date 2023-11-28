@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Registration
 from .forms import UserForm, LoginForm
 from django.http import HttpResponse
+from django.contrib import messages
 
 
 # Create your views here.
@@ -64,8 +65,8 @@ def login(request):
             else:
                 log_form={
                     "form" : form,
-                    "error" : "Invalid Email or Password"
                 }
+                messages.info(request, 'Invalid Email or Password')
                 return render(request, "login.html", log_form)
             
         except Registration.DoesNotExist:
